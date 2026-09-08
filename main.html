@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ikonfess — Bengaluru</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --ink: #1B2A4A;
+    --ink-soft: #33456C;
+    --gold: #A8791F;
+    --gold-soft: #D9BE86;
+    --linen: #FAF6EF;
+    --paper: #FFFFFF;
+    --sage: #6E7F5C;
+    --charcoal: #2B2A28;
+    --charcoal-soft: #5C594F;
+    --line: #E4DCC9;
+    --max: 700px;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background: var(--linen);
+    color: var(--charcoal);
+    font-family: 'Inter', sans-serif;
+    font-size: 16.5px;
+    line-height: 1.58;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3{
+    font-family: 'Fraunces', serif;
+    color: var(--ink);
+    margin: 0;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  a{ color: inherit; }
+
+  .wrap{ max-width: 1040px; margin: 0 auto; padding: 0 28px; }
+  .col{ max-width: var(--max); }
+
+  /* Nav */
+  header{ padding: 22px 0; }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; }
+  .brand-block{ display:flex; align-items:baseline; gap: 9px; }
+  .wordmark{
+    font-family:'Fraunces', serif;
+    font-size: 21px;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration:none;
+  }
+  .wordmark span{ color: var(--gold); }
+  .city-tag{ font-size: 12.5px; color: var(--sage); font-weight: 600; }
+  .nav-cta{
+    font-family:'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration:none;
+    color: var(--ink);
+    border-bottom: 1.5px solid var(--gold-soft);
+    padding-bottom: 2px;
+  }
+  .nav-cta:hover{ border-color: var(--gold); }
+
+  /* Sections */
+  section{ padding: 44px 0; }
+  .rule{ border: none; border-top: 1px solid var(--line); margin: 0; }
+
+  /* ---- Section 1: Hero ---- */
+  .hero{ padding-top: 30px; }
+  .hero-kicker{
+    font-family:'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--sage);
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+  .hero h1{
+    font-size: clamp(34px, 7vw, 54px);
+    line-height: 1.1;
+    margin-bottom: 18px;
+  }
+  .hero h1 em{ font-style: italic; color: var(--gold); }
+  .hero p.lede{
+    font-size: 17.5px;
+    color: var(--charcoal-soft);
+    max-width: 500px;
+    margin-bottom: 22px;
+  }
+
+  .btn{
+    display:inline-block;
+    background: var(--ink);
+    color: var(--linen);
+    font-family:'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 15.5px;
+    text-decoration: none;
+    padding: 14px 26px;
+    border-radius: 3px;
+    transition: background 0.15s ease;
+  }
+  .btn:hover{ background: var(--ink-soft); }
+  .btn:focus-visible{ outline: 3px solid var(--gold-soft); outline-offset: 2px; }
+
+  .hero-note{
+    margin-top: 14px;
+    font-size: 14px;
+    color: var(--charcoal-soft);
+  }
+
+  /* ---- Section 2: How + why, combined ---- */
+  .section-head{ margin-bottom: 30px; }
+  .section-head h2{ font-size: clamp(24px, 4vw, 30px); }
+  .section-head p{ color: var(--charcoal-soft); margin-top: 8px; max-width: 480px; font-size: 15.5px; }
+
+  .steps{ display:flex; flex-direction: column; }
+  .step{
+    display:grid;
+    grid-template-columns: 40px 1fr;
+    gap: 14px;
+    padding: 18px 0;
+    border-top: 1px solid var(--line);
+  }
+  .step-num{
+    font-family:'Fraunces', serif;
+    font-size: 24px;
+    font-style: italic;
+    color: var(--gold-soft);
+    line-height: 1;
+  }
+  .step h3{ font-size: 17.5px; margin-bottom: 4px; }
+  .step p{ color: var(--charcoal-soft); margin: 0; font-size: 15px; max-width: 460px; }
+
+  .trust-row{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 22px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+  .trust-chip{
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 6px 12px;
+    border-radius: 20px;
+  }
+
+  /* ---- Section 3: Pricing + close ---- */
+  .pricing-card{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 30px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 34px;
+  }
+  .pricing-card h3{ font-size: 19px; margin-bottom: 6px; }
+  .pricing-card p{ color: var(--charcoal-soft); margin:0; max-width: 380px; font-size: 15px; }
+  .price-tag{
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    color: var(--gold);
+    font-size: 17px;
+    white-space: nowrap;
+  }
+
+  .closing h2{
+    font-size: clamp(24px, 4.5vw, 32px);
+    max-width: 500px;
+    margin-bottom: 20px;
+  }
+
+  footer{ border-top: 1px solid var(--line); padding: 26px 0 34px; }
+  .footer-row{
+    display:flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .footer-row .wordmark{ font-size: 16px; }
+  footer p{ color: var(--charcoal-soft); font-size: 13px; margin: 0; }
+
+  @media (max-width: 640px){
+    .wrap{ padding: 0 20px; }
+    section{ padding: 34px 0; }
+    .pricing-card{ padding: 24px; flex-direction: column; align-items:flex-start; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    .btn{ transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav-row">
+    <div class="brand-block">
+      <a class="wordmark" href="#top">ikonfess<span>.</span></a>
+      <span class="city-tag">Bengaluru</span>
+    </div>
+    <a class="nav-cta" href="https://forms.gle/DjQP7Gbrsaxvp7Nv9">Join the waitlist</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- Section 1: Hero -->
+  <section class="hero">
+    <div class="wrap col">
+      <div class="hero-kicker">ikonfess, for namma Bengaluru</div>
+      <h1>One church. <em>One match.</em><br>One Sunday.</h1>
+      <p class="lede">Matched with one person from any church across Bengaluru every Friday — talk through the weekend, then meet in person at church after mass.</p>
+      <a class="btn" href="https://forms.gle/DjQP7Gbrsaxvp7Nv9">Join the waitlist</a>
+      <div class="hero-note">Fill the form, join the waitlist — pay only once we've actually found your match.</div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- Section 2: How it works + why it works -->
+  <section id="how">
+    <div class="wrap col">
+      <div class="section-head">
+        <h2>How it works</h2>
+        <p>Three steps, and the last one is always yours to make.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <h3>Fill the form, join the waitlist</h3>
+            <p>Just you and your church. That's the only profile we build.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <h3>Get matched on Friday</h3>
+            <p>One person from any church in Bengaluru, found for you before the weekend. You'll hear from us every Friday, even on weeks we can't find someone.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <h3>Pay to unlock their details</h3>
+            <p>Only once we've actually found someone for you. No match, no charge.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div>
+            <h3>Talk for two days, then meet after mass</h3>
+            <p>Chat through the weekend, then meet in person at church on Sunday, once service is done.</p>
+          </div>
+        </div>
+      </div>
+      <div class="trust-row">
+        <span class="trust-chip">Private profile</span>
+        <span class="trust-chip">No photos shared</span>
+        <span class="trust-chip">A weekly update every Friday, match or not</span>
+        <span class="trust-chip">Just one match, not hundreds</span>
+        <span class="trust-chip">You meet at church, after mass</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- Section 3: Pricing + close -->
+  <section class="closing" id="form">
+    <div class="wrap col">
+      <div class="pricing-card">
+        <div>
+          <h3>Pay only when we find your match</h3>
+          <p>No match on Friday, no charge. Pay once, only to unlock the details of the person we've found for you.</p>
+        </div>
+        <div class="price-tag">No match, no charge.</div>
+      </div>
+      <h2>Your church already brought you this far.</h2>
+      <a class="btn" href="https://forms.gle/DjQP7Gbrsaxvp7Nv9">Join the waitlist</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-row">
+    <div class="brand-block">
+      <a class="wordmark" href="#top">ikonfess<span>.</span></a>
+      <span class="city-tag">Bengaluru</span>
+    </div>
+    <p>One church, one match, one Sunday at a time, across namma Bengaluru.</p>
+  </div>
+</footer>
+
+</body>
+</html>
