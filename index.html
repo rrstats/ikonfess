@@ -73,6 +73,23 @@
   }
   .nav-cta:hover{ border-color: var(--gold); }
 
+  .live-dot{
+    width: 15px; height: 15px;
+    border-radius: 50%;
+    background: #4C9A5A;
+    box-shadow: 0 0 0 5px rgba(76,154,90,0.18);
+    flex-shrink: 0;
+  }
+  .hero-live{
+    display: flex;
+    align-items: center;
+    gap: 11px;
+  }
+  .live-dot-lg{
+    width: 18px; height: 18px;
+    box-shadow: 0 0 0 6px rgba(76,154,90,0.18);
+  }
+
   /* Sections */
   section{ padding: 44px 0; }
   .rule{ border: none; border-top: 1px solid var(--line); margin: 0; }
@@ -229,7 +246,7 @@
   <!-- Section 1: Hero -->
   <section class="hero">
     <div class="wrap col">
-      <div class="hero-kicker">ikonfess, for namma Bengaluru</div>
+      <div class="hero-kicker hero-live"><span class="live-dot live-dot-lg"></span>Now live in Bengaluru</div>
       <h1>One church. <em>One match.</em><br>One Sunday.</h1>
       <p class="lede">Matched with one person from any church across Bengaluru every Friday — talk through the weekend, then meet in person at church after mass.</p>
       <a class="btn" href="https://forms.gle/DjQP7Gbrsaxvp7Nv9">Join the waitlist</a>
