@@ -165,8 +165,8 @@
     background: var(--paper);
     border: 1px solid var(--line);
     border-radius: 6px;
-    padding: 22px 22px 20px;
-    max-width: 500px;
+    padding: 20px 20px 18px;
+    max-width: 100%;
   }
   .whatsapp-label{
     display:block;
@@ -331,9 +331,100 @@
     html{ scroll-behavior: auto; }
     .btn{ transition: none; }
   }
+
+  /* ---- Gender gate (shown on load, full page) ---- */
+  html.gate-open, html.gate-open body{
+    overflow: hidden;
+    height: 100%;
+  }
+  #site-content{ display:none; }
+
+  #gender-gate{
+    position: fixed;
+    inset: 0;
+    background: var(--linen);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+  }
+  .gate-inner{
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+  }
+  .gate-kicker{
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 14px;
+  }
+  .gate-inner h1{
+    font-size: clamp(26px, 6vw, 34px);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .gate-sub{
+    font-size: 15px;
+    color: var(--charcoal-soft);
+    margin-bottom: 30px;
+  }
+  .gate-options{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .gate-option{
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+    text-align: center;
+  }
+  .gate-option:hover{
+    border-color: var(--gold);
+    background: #FFFDF8;
+  }
+  .gate-option:active{ transform: scale(0.99); }
+  .gate-option:focus-visible{ outline: 3px solid var(--gold-soft); outline-offset: 2px; }
+  .gate-fineprint{
+    margin-top: 26px;
+    font-size: 12.5px;
+    color: var(--charcoal-soft);
+  }
+
+  @media (max-width: 640px){
+    .gate-option{ padding: 15px 18px; font-size: 15.5px; }
+  }
 </style>
 </head>
-<body>
+<body class="gate-open">
+
+<div id="gender-gate">
+  <div class="gate-inner">
+    <div class="gate-kicker">Before you go in</div>
+    <h1>How do you identify?</h1>
+    <p class="gate-sub">Just so we can match you with the right kind of person.</p>
+    <div class="gate-options" role="group" aria-label="Select your gender">
+      <button type="button" class="gate-option" data-gender="Male">Male</button>
+      <button type="button" class="gate-option" data-gender="Female">Female</button>
+      <button type="button" class="gate-option" data-gender="LGBTQ+">LGBTQ+</button>
+    </div>
+    <p class="gate-fineprint">This stays private and is never shared.</p>
+  </div>
+</div>
+
+<div id="site-content">
 
 <header>
   <div class="wrap nav-row">
@@ -446,7 +537,25 @@
   </div>
 </footer>
 
+</div>
+
 <script>
+  // Full-page gender gate: shown on load, hides the site until a choice is made.
+  let selectedGender = '';
+  const genderGate = document.getElementById('gender-gate');
+  const siteContent = document.getElementById('site-content');
+
+  document.querySelectorAll('.gate-option').forEach(function(optionBtn){
+    optionBtn.addEventListener('click', function(){
+      selectedGender = optionBtn.getAttribute('data-gender'); // kept in memory for this session
+
+      genderGate.remove();
+      document.documentElement.classList.remove('gate-open');
+      siteContent.style.display = 'block';
+      window.scrollTo(0, 0);
+    });
+  });
+
   // Keeps the entered WhatsApp number in memory for this session,
   // then routes the person on to the waitlist form.
   const FORM_BASE_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdbn4ctcw2fZsqNxv5HZzKYnElD0O4ySZxT67NP6X29XUOGsA/viewform';
