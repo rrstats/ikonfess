@@ -20,6 +20,7 @@
     --charcoal: #2B2A28;
     --charcoal-soft: #5C594F;
     --line: #E4DCC9;
+    --error: #B3492E;
     --max: 700px;
   }
 
@@ -127,6 +128,8 @@
     padding: 14px 26px;
     border-radius: 3px;
     transition: background 0.15s ease;
+    border: none;
+    cursor: pointer;
   }
   .btn:hover{ background: var(--ink-soft); }
   .btn:focus-visible{ outline: 3px solid var(--gold-soft); outline-offset: 2px; }
@@ -134,6 +137,75 @@
   .hero-note{
     margin-top: 14px;
     font-size: 14px;
+    color: var(--charcoal-soft);
+  }
+
+  /* ---- WhatsApp capture box ---- */
+  .divider-word{
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    max-width: 500px;
+    margin: 26px 0;
+    color: var(--charcoal-soft);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .divider-word::before,
+  .divider-word::after{
+    content:"";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .whatsapp-box{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 22px 22px 20px;
+    max-width: 500px;
+  }
+  .whatsapp-label{
+    display:block;
+    font-family:'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14.5px;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .whatsapp-row{
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .whatsapp-input{
+    flex: 1 1 220px;
+    font-family:'Inter', sans-serif;
+    font-size: 15.5px;
+    padding: 13px 14px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: var(--linen);
+    color: var(--charcoal);
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .whatsapp-input:focus{ border-color: var(--gold); }
+  .whatsapp-input.error{ border-color: var(--error); }
+  .whatsapp-btn{ flex: 0 0 auto; }
+  .whatsapp-error{
+    display:none;
+    color: var(--error);
+    font-size: 13px;
+    margin-top: 9px;
+  }
+  .whatsapp-error.show{ display:block; }
+  .whatsapp-fineprint{
+    margin-top: 12px;
+    font-size: 13px;
     color: var(--charcoal-soft);
   }
 
@@ -221,6 +293,8 @@
     .wrap{ padding: 0 20px; }
     section{ padding: 34px 0; }
     .pricing-card{ padding: 24px; flex-direction: column; align-items:flex-start; }
+    .whatsapp-row{ flex-direction: column; }
+    .whatsapp-btn{ width: 100%; }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -249,7 +323,17 @@
       <div class="hero-kicker hero-live"><span class="live-dot live-dot-lg"></span>Now live in Bengaluru</div>
       <h1>One church. <em>One match.</em><br>One Sunday.</h1>
       <p class="lede">Matched with one person from any church across Bengaluru every Friday — talk through the weekend, then meet in person at church after mass.</p>
-      <a class="btn" href="https://forms.gle/DjQP7Gbrsaxvp7Nv9">Join the waitlist</a>
+
+      <div class="whatsapp-box">
+        <label class="whatsapp-label" for="wa-number">Add your WhatsApp number</label>
+        <div class="whatsapp-row">
+          <input type="tel" id="wa-number" class="whatsapp-input" placeholder="+91 98765 43210" inputmode="tel" autocomplete="tel">
+          <button type="button" class="btn whatsapp-btn" id="wa-submit">Join the waitlist</button>
+        </div>
+        <div class="whatsapp-error" id="wa-error">Please add a valid WhatsApp number to continue.</div>
+        <div class="whatsapp-fineprint">We'll only use this to reach you about your match — never shared.</div>
+      </div>
+
       <div class="hero-note">Fill the form, join the waitlist — pay only once we've actually found your match.</div>
     </div>
   </section>
@@ -331,6 +415,60 @@
     <p>One church, one match, one Sunday at a time, across namma Bengaluru.</p>
   </div>
 </footer>
+
+<script>
+  // Keeps the entered WhatsApp number in memory for this session,
+  // then routes the person on to the waitlist form.
+  const FORM_BASE_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdbn4ctcw2fZsqNxv5HZzKYnElD0O4ySZxT67NP6X29XUOGsA/viewform';
+  const PHONE_ENTRY_ID = 'entry.773599161';
+  let capturedWhatsAppNumber = '';
+
+  const waInput = document.getElementById('wa-number');
+  const waSubmit = document.getElementById('wa-submit');
+  const waError = document.getElementById('wa-error');
+
+  function isLikelyPhoneNumber(value){
+    const digits = value.replace(/[^\d]/g, '');
+    return digits.length >= 8;
+  }
+
+  function handleSubmit(){
+    const value = waInput.value.trim();
+    if(!isLikelyPhoneNumber(value)){
+      waInput.classList.add('error');
+      waError.classList.add('show');
+      waInput.focus();
+      return;
+    }
+    waInput.classList.remove('error');
+    waError.classList.remove('show');
+
+    // Store in memory for this session (not persisted to disk/localStorage)
+    capturedWhatsAppNumber = value;
+
+    // Hand off to the waitlist form, with the Phone question pre-filled.
+    // Opened in a new top-level tab so Google Forms isn't loaded inside an iframe
+    // (Forms blocks that and shows "This content is blocked").
+    const prefilledUrl = FORM_BASE_URL + '?usp=pp_url&' + PHONE_ENTRY_ID + '=' + encodeURIComponent(capturedWhatsAppNumber);
+    const opened = window.open(prefilledUrl, '_blank', 'noopener,noreferrer');
+    if(!opened){
+      // Popup blocked — fall back to navigating this window/tab directly.
+      window.location.href = prefilledUrl;
+    }
+  }
+
+  waSubmit.addEventListener('click', handleSubmit);
+  waInput.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      handleSubmit();
+    }
+  });
+  waInput.addEventListener('input', function(){
+    waInput.classList.remove('error');
+    waError.classList.remove('show');
+  });
+</script>
 
 </body>
 </html>
