@@ -403,6 +403,37 @@
     color: var(--charcoal-soft);
   }
 
+  .gate-age-row{
+    display: flex;
+    gap: 10px;
+  }
+  .gate-age-input{
+    flex: 1 1 auto;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--paper);
+    color: var(--charcoal);
+    outline: none;
+    text-align: center;
+    transition: border-color 0.15s ease;
+    box-sizing: border-box;
+  }
+  .gate-age-input:focus{ border-color: var(--gold); }
+  .gate-age-input.error{ border-color: var(--error); }
+  .gate-age-btn{ flex: 0 0 auto; }
+  .gate-age-error{
+    display: none;
+    color: var(--error);
+    font-size: 13px;
+    margin-top: 10px;
+    text-align: left;
+  }
+  .gate-age-error.show{ display: block; }
+
   @media (max-width: 640px){
     .gate-option{ padding: 15px 18px; font-size: 15.5px; }
   }
@@ -411,7 +442,7 @@
 <body class="gate-open">
 
 <div id="gender-gate">
-  <div class="gate-inner">
+  <div class="gate-inner" id="gate-step-gender">
     <div class="gate-kicker">Before you go in</div>
     <h1>How do you identify?</h1>
     <p class="gate-sub">Just so we can match you with the right kind of person.</p>
@@ -420,6 +451,18 @@
       <button type="button" class="gate-option" data-gender="Female">Female</button>
       <button type="button" class="gate-option" data-gender="LGBTQ+">LGBTQ+</button>
     </div>
+    <p class="gate-fineprint">This stays private and is never shared.</p>
+  </div>
+
+  <div class="gate-inner" id="gate-step-age" style="display:none;">
+    <div class="gate-kicker">Almost there</div>
+    <h1>How old are you?</h1>
+    <p class="gate-sub">This helps us match you with someone in a similar stage of life.</p>
+    <div class="gate-age-row">
+      <input type="number" id="gate-age-input" class="gate-age-input" placeholder="Age" min="18" max="99" inputmode="numeric">
+      <button type="button" class="btn gate-age-btn" id="gate-age-submit">Continue</button>
+    </div>
+    <div class="gate-age-error" id="gate-age-error">Please enter a valid age (18 or above).</div>
     <p class="gate-fineprint">This stays private and is never shared.</p>
   </div>
 </div>
@@ -540,20 +583,55 @@
 </div>
 
 <script>
-  // Full-page gender gate: shown on load, hides the site until a choice is made.
+  // Full-page gate: two steps (gender, then age), shown on load, hides the site until both are answered.
   let selectedGender = '';
+  let selectedAge = '';
   const genderGate = document.getElementById('gender-gate');
   const siteContent = document.getElementById('site-content');
+  const gateStepGender = document.getElementById('gate-step-gender');
+  const gateStepAge = document.getElementById('gate-step-age');
 
-  document.querySelectorAll('.gate-option').forEach(function(optionBtn){
+  gateStepGender.querySelectorAll('.gate-option').forEach(function(optionBtn){
     optionBtn.addEventListener('click', function(){
       selectedGender = optionBtn.getAttribute('data-gender'); // kept in memory for this session
-
-      genderGate.remove();
-      document.documentElement.classList.remove('gate-open');
-      siteContent.style.display = 'block';
-      window.scrollTo(0, 0);
+      gateStepGender.style.display = 'none';
+      gateStepAge.style.display = 'block';
     });
+  });
+
+  const gateAgeInput = document.getElementById('gate-age-input');
+  const gateAgeSubmit = document.getElementById('gate-age-submit');
+  const gateAgeError = document.getElementById('gate-age-error');
+
+  function handleAgeSubmit(){
+    const value = parseInt(gateAgeInput.value, 10);
+    if(!value || value < 18 || value > 99){
+      gateAgeInput.classList.add('error');
+      gateAgeError.classList.add('show');
+      gateAgeInput.focus();
+      return;
+    }
+    gateAgeInput.classList.remove('error');
+    gateAgeError.classList.remove('show');
+
+    selectedAge = value; // kept in memory for this session
+
+    genderGate.remove();
+    document.documentElement.classList.remove('gate-open');
+    siteContent.style.display = 'block';
+    window.scrollTo(0, 0);
+  }
+
+  gateAgeSubmit.addEventListener('click', handleAgeSubmit);
+  gateAgeInput.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      handleAgeSubmit();
+    }
+  });
+  gateAgeInput.addEventListener('input', function(){
+    gateAgeInput.classList.remove('error');
+    gateAgeError.classList.remove('show');
   });
 
   // Keeps the entered WhatsApp number in memory for this session,
