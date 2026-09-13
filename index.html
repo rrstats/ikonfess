@@ -332,6 +332,52 @@
     .btn{ transition: none; }
   }
 
+  /* ---- Waitlist closed state ---- */
+  .join-closed{
+    filter: blur(0.6px);
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .closed-overlay{
+    position: fixed;
+    inset: 0;
+    background: var(--linen);
+    z-index: 10001;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+  }
+  .closed-overlay .gate-inner{ max-width: 460px; text-align: left; }
+  .closed-overlay .gate-kicker,
+  .closed-overlay h1,
+  .closed-overlay .gate-sub{ text-align: center; }
+  .closed-row{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .closed-error{
+    display: none;
+    color: var(--error);
+    font-size: 13px;
+    margin-top: 10px;
+  }
+  .closed-error.show{ display: block; }
+  .closed-skip{
+    display: block;
+    margin: 22px auto 0;
+    background: none;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    color: var(--charcoal-soft);
+    text-decoration: underline;
+    cursor: pointer;
+    text-align: center;
+  }
+
   /* ---- Gender gate (shown on load, full page) ---- */
   html.gate-open, html.gate-open body{
     overflow: hidden;
@@ -443,7 +489,7 @@
       <a class="wordmark" href="#top">ikonfess<span>.</span></a>
       <span class="city-tag">Bengaluru</span>
     </div>
-    <a class="nav-cta" href="https://forms.gle/DjQP7Gbrsaxvp7Nv9">Join the waitlist</a>
+    <a class="nav-cta" id="nav-join" href="https://forms.gle/DjQP7Gbrsaxvp7Nv9">Join the waitlist</a>
   </div>
 </header>
 
@@ -452,9 +498,9 @@
   <!-- Section 1: Hero -->
   <section class="hero">
     <div class="wrap col">
-      <div class="hero-kicker hero-live"><span class="live-dot live-dot-lg"></span>Now live in Bengaluru</div>
+      <div class="hero-kicker hero-live"><span class="live-dot live-dot-lg"></span>Forms open on the 21st of every month</div>
       <h1>One church. <em>One match.</em><br>One Sunday.</h1>
-      <p class="lede">Matched with one person from any church across Bengaluru every Friday — talk through the weekend, then meet in person at church after mass.</p>
+      <p class="lede">Apply from the 21st, get matched by the 1st, and meet at church the following Sunday.</p>
 
       <div class="whatsapp-box">
         <label class="whatsapp-label" for="wa-number">Add your WhatsApp number</label>
@@ -484,14 +530,14 @@
           <div class="step-num">1</div>
           <div>
             <h3>Fill the form, join the waitlist</h3>
-            <p>Just you and your church. That's the only profile we build.</p>
+            <p>Forms open on the 21st of every month and close shortly after. Just you and your church — that's the only profile we build.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">2</div>
           <div>
-            <h3>Get matched on Friday</h3>
-            <p>One person from any church in Bengaluru, found for you before the weekend. You'll hear from us every Friday, even on weeks we can't find someone.</p>
+            <h3>Get matched by the 1st</h3>
+            <p>One person from any church in Bengaluru, found for you by the 1st of the next month. You'll hear from us either way.</p>
           </div>
         </div>
         <div class="step">
@@ -504,15 +550,15 @@
         <div class="step">
           <div class="step-num">4</div>
           <div>
-            <h3>Talk for two days, then meet after mass</h3>
-            <p>Chat through the weekend, then meet in person at church on Sunday, once service is done.</p>
+            <h3>Meet on the first Sunday</h3>
+            <p>Talk through the month, then meet at church on the first Sunday of the next month — or simply attend mass together.</p>
           </div>
         </div>
       </div>
       <div class="trust-row">
         <span class="trust-chip">Private profile</span>
         <span class="trust-chip">No photos shared</span>
-        <span class="trust-chip">A weekly update every Friday, match or not</span>
+        <span class="trust-chip">An update by the 1st, match or not</span>
         <span class="trust-chip">Just one match, not hundreds</span>
         <span class="trust-chip">You meet at church, after mass</span>
       </div>
@@ -527,12 +573,12 @@
       <div class="pricing-card">
         <div>
           <h3>Pay only when we find your match</h3>
-          <p>No match on Friday, no charge. Pay once, only to unlock the details of the person we've found for you.</p>
+          <p>No match by the 1st, no charge. Pay once, only to unlock the details of the person we've found for you.</p>
         </div>
         <div class="price-tag">No match, no charge.</div>
       </div>
       <h2>Your church already brought you this far.</h2>
-      <a class="btn" href="https://forms.gle/DjQP7Gbrsaxvp7Nv9">Join the waitlist</a>
+      <a class="btn" id="closing-join" href="https://forms.gle/DjQP7Gbrsaxvp7Nv9">Join the waitlist</a>
     </div>
   </section>
 
@@ -548,6 +594,20 @@
   </div>
 </footer>
 
+</div>
+
+<div id="closed-overlay" class="closed-overlay">
+  <div class="gate-inner">
+    <div class="gate-kicker" id="closed-kicker">Applications are closed for now</div>
+    <h1>They reopen on the 21st.</h1>
+    <p class="gate-sub">Add your WhatsApp number to join our Early Access Community — we'll reach out the moment applications open again.</p>
+    <div class="closed-row">
+      <input type="tel" id="closed-phone-input" class="whatsapp-input" placeholder="+91 98765 43210" inputmode="tel" autocomplete="tel">
+      <button type="button" class="btn" id="closed-submit">Join Early Access Community</button>
+    </div>
+    <div class="closed-error" id="closed-error">Please add a valid WhatsApp number to continue.</div>
+    <button type="button" class="closed-skip" id="closed-skip">Not now — take me to How it works</button>
+  </div>
 </div>
 
 <script>
@@ -578,6 +638,91 @@
     });
   });
 
+  // ---- Waitlist window check: open from the 21st through end of month, ----
+  // ---- closed on the 2nd–20th (i.e. "before the 21st and after the 1st"). ----
+  const today = new Date();
+  const dayOfMonth = today.getDate();
+  const isWaitlistClosed = dayOfMonth > 1 && dayOfMonth < 21;
+  const monthName = today.toLocaleString('en-US', { month: 'long' });
+
+  const EARLY_ACCESS_FORM_BASE_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSe-DibYldMJy7-rsvsW4p8rJWaf6Bpp7gXW9UW8-zaC6rpwgg/viewform';
+  const EARLY_ACCESS_PHONE_ENTRY_ID = 'entry.773599161';
+
+  const closedOverlay = document.getElementById('closed-overlay');
+  const closedKicker = document.getElementById('closed-kicker');
+  const closedInput = document.getElementById('closed-phone-input');
+  const closedSubmit = document.getElementById('closed-submit');
+  const closedError = document.getElementById('closed-error');
+  const closedSkip = document.getElementById('closed-skip');
+
+  function openClosedOverlay(){
+    closedKicker.textContent = 'Applications reopen on the 21st of ' + monthName;
+    // Carry over whatever WhatsApp number was already typed, if any
+    closedInput.value = (waInput && waInput.value.trim()) ? waInput.value.trim() : capturedWhatsAppNumber;
+    closedInput.classList.remove('error');
+    closedError.classList.remove('show');
+    closedOverlay.style.display = 'flex';
+  }
+
+  function goToHowItWorks(){
+    closedOverlay.style.display = 'none';
+    const howSection = document.getElementById('how');
+    if(howSection){
+      howSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  function handleClosedSubmit(){
+    const value = closedInput.value.trim();
+    if(!isLikelyPhoneNumber(value)){
+      closedInput.classList.add('error');
+      closedError.classList.add('show');
+      closedInput.focus();
+      return;
+    }
+    closedInput.classList.remove('error');
+    closedError.classList.remove('show');
+
+    capturedWhatsAppNumber = value; // kept in memory for this session
+
+    // Carries the same phone number into the Early Access Community form's Phone field
+    const earlyAccessUrl = EARLY_ACCESS_FORM_BASE_URL + '?usp=pp_url&' + EARLY_ACCESS_PHONE_ENTRY_ID + '=' + encodeURIComponent(value);
+    window.open(earlyAccessUrl, '_blank', 'noopener,noreferrer');
+
+    goToHowItWorks();
+  }
+
+  closedSubmit.addEventListener('click', handleClosedSubmit);
+  closedInput.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      handleClosedSubmit();
+    }
+  });
+  closedInput.addEventListener('input', function(){
+    closedInput.classList.remove('error');
+    closedError.classList.remove('show');
+  });
+  closedSkip.addEventListener('click', goToHowItWorks);
+
+  if(isWaitlistClosed){
+    const navJoin = document.getElementById('nav-join');
+    const closingJoin = document.getElementById('closing-join');
+    const waBoxButton = document.getElementById('wa-submit');
+
+    [navJoin, closingJoin, waBoxButton].forEach(function(el){
+      if(el) el.classList.add('join-closed');
+    });
+
+    [navJoin, closingJoin].forEach(function(anchor){
+      if(!anchor) return;
+      anchor.addEventListener('click', function(e){
+        e.preventDefault();
+        openClosedOverlay();
+      });
+    });
+  }
+
   // Keeps the entered WhatsApp number in memory for this session,
   // then routes the person on to the waitlist form.
   const FORM_BASE_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdbn4ctcw2fZsqNxv5HZzKYnElD0O4ySZxT67NP6X29XUOGsA/viewform';
@@ -594,6 +739,11 @@
   }
 
   function handleSubmit(){
+    if(isWaitlistClosed){
+      openClosedOverlay();
+      return;
+    }
+
     const value = waInput.value.trim();
     if(!isLikelyPhoneNumber(value)){
       waInput.classList.add('error');
