@@ -635,15 +635,33 @@
       document.documentElement.classList.remove('gate-open');
       siteContent.style.display = 'block';
       window.scrollTo(0, 0);
+      refreshClosedState();
     });
   });
 
   // ---- Waitlist window check: open from the 21st through end of month, ----
   // ---- closed on the 2nd–20th (i.e. "before the 21st and after the 1st"). ----
+  // ---- Does not apply at all if the visitor selected "Female" on the gate. ----
   const today = new Date();
   const dayOfMonth = today.getDate();
-  const isWaitlistClosed = dayOfMonth > 1 && dayOfMonth < 21;
+  const isDateWithinClosedWindow = dayOfMonth > 1 && dayOfMonth < 21;
   const monthName = today.toLocaleString('en-US', { month: 'long' });
+
+  function effectivelyClosed(){
+    return isDateWithinClosedWindow && selectedGender !== 'Female';
+  }
+
+  const navJoin = document.getElementById('nav-join');
+  const closingJoin = document.getElementById('closing-join');
+  const waBoxButton = document.getElementById('wa-submit');
+
+  function refreshClosedState(){
+    const closed = effectivelyClosed();
+    [navJoin, closingJoin, waBoxButton].forEach(function(el){
+      if(!el) return;
+      el.classList.toggle('join-closed', closed);
+    });
+  }
 
   const EARLY_ACCESS_FORM_BASE_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSe-DibYldMJy7-rsvsW4p8rJWaf6Bpp7gXW9UW8-zaC6rpwgg/viewform';
   const EARLY_ACCESS_PHONE_ENTRY_ID = 'entry.773599161';
@@ -705,23 +723,15 @@
   });
   closedSkip.addEventListener('click', goToHowItWorks);
 
-  if(isWaitlistClosed){
-    const navJoin = document.getElementById('nav-join');
-    const closingJoin = document.getElementById('closing-join');
-    const waBoxButton = document.getElementById('wa-submit');
-
-    [navJoin, closingJoin, waBoxButton].forEach(function(el){
-      if(el) el.classList.add('join-closed');
-    });
-
-    [navJoin, closingJoin].forEach(function(anchor){
-      if(!anchor) return;
-      anchor.addEventListener('click', function(e){
+  [navJoin, closingJoin].forEach(function(anchor){
+    if(!anchor) return;
+    anchor.addEventListener('click', function(e){
+      if(effectivelyClosed()){
         e.preventDefault();
         openClosedOverlay();
-      });
+      }
     });
-  }
+  });
 
   // Keeps the entered WhatsApp number in memory for this session,
   // then routes the person on to the waitlist form.
@@ -739,7 +749,7 @@
   }
 
   function handleSubmit(){
-    if(isWaitlistClosed){
+    if(effectivelyClosed()){
       openClosedOverlay();
       return;
     }
